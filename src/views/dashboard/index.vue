@@ -1,6 +1,6 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+  <div class="index-container">
+    <div class="index-text">name: {{ name }}</div>
   </div>
 </template>
 
@@ -18,7 +18,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dashboard {
+.index {
   &-container {
     margin: 30px;
   }

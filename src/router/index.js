@@ -25,25 +25,16 @@ import Layout from '@/layout'
   }
  */
 
-/**
- * constantRoutes
- * a base page that does not have permission requirements
- * all roles can be accessed
- */
+// 所有权限通用路由表
+// 如首页和登录页和一些不用权限的公用页面
+// detail: https://panjiachen.github.io/vue-element-admin-site/zh/guide/essentials/router-and-nav.html
 export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
-    hidden: true,
+    hidden: true, // 默认 false ，当设置 true 的时候该路由不会再侧边栏出现 如401，login等页面
     meta: { title: 'login', icon: 'login' }
   },
-
-  {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
-  },
-
   {
     path: '/',
     component: Layout,
@@ -91,6 +82,19 @@ export const constantRoutes = [
     ]
   },
 
+  {
+    path: '/404',
+    component: () => import('@/views/404'),
+    hidden: true
+  },
+  { path: '*', redirect: '/404', hidden: true } // 404 page must be placed at the end !!!
+]
+
+/**
+ * asyncRoutes
+ * 需要根据 用户角色权限 动态加载的路由
+ */
+export const asyncRoutes = [
   {
     path: '/nested',
     component: Layout,
@@ -158,16 +162,16 @@ export const constantRoutes = [
         meta: { title: 'External Link', icon: 'link' }
       }
     ]
-  },
-
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  }
 ]
 
 const createRouter = () => new Router({
+  // vue-router 默认 hash 模式，使用 URL 的 hash 来模拟一个完整的 URL，于是当 URL 改变时，页面不会重新加载
   // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  routes: constantRoutes,
+  scrollBehavior() { // 这个功能只在 history 模式下可用
+    return { y: 0 }
+  }
 })
 
 const router = createRouter()

@@ -17,6 +17,8 @@ router.beforeEach(async(to, from, next) => {
   // set page title
   document.title = getPageTitle(to.meta.title)
 
+  // debugger  // eslint-disable-line
+
   // determine whether the user has logged in
   const hasToken = getToken()
 
@@ -26,15 +28,19 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasGetUserInfo = store.getters.name
-      if (hasGetUserInfo) {
+      // 确定用户是否已获得其权限角色
+      const hasRoles = store.getters.roles.length > 0
+      if (hasRoles) {
         next()
       } else {
         try {
-          // get user info
-          await store.dispatch('user/getInfo')
-
-          next()
+          const { roles } = await store.dispatch('user/getInfo')
+          // 根据用户的角色roles拿到 动态权限路由
+          const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+          // 动态添加有权访问的路由
+          router.addRoutes(accessRoutes)
+          // 设置 replace: true 则history记录不会新增，而是替代上条记录
+          next({ ...to, replace: true })
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')
@@ -46,7 +52,6 @@ router.beforeEach(async(to, from, next) => {
     }
   } else {
     /* has no token*/
-
     if (whiteList.indexOf(to.path) !== -1) {
       // in the free login whitelist, go directly
       next()
