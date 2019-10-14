@@ -29,20 +29,28 @@ export default [
     url: '/user/login',
     type: 'post',
     response: config => {
-      const { username } = config.body
-      const token = tokens[username]
+      const { username, password } = config.body
 
-      // mock error
-      if (!token) {
+      // 用户校验，规则自定义
+      const token = tokens[username]
+      if (token) {
+        if (password.length) {
+          return { // 登陆成功
+            code: 20000,
+            message: '登陆成功',
+            data: token
+          }
+        } else {
+          return {
+            code: 60203,
+            message: '密码错误'
+          }
+        }
+      } else {
         return {
           code: 60204,
-          message: 'Account and password are incorrect.'
+          message: '不存在此用户'
         }
-      }
-
-      return {
-        code: 20000,
-        data: token
       }
     }
   },

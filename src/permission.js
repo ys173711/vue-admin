@@ -39,7 +39,8 @@ router.beforeEach(async(to, from, next) => {
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
           // 动态添加有权访问的路由
           router.addRoutes(accessRoutes)
-          // 设置 replace: true 则history记录不会新增，而是替代上条记录
+          // 这里还有一个小hack的地方，就是router.addRoutes之后的next()可能会失效，因为可能next()的时候路由并没有完全add完成
+          // hack方法 确保 addRoutes 已完成，设置 replace: true 则history记录不会新增，而是替代上条记录
           next({ ...to, replace: true })
         } catch (error) {
           // remove token and go to login page to re-login

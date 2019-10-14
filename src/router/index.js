@@ -84,10 +84,10 @@ export const constantRoutes = [
 
   {
     path: '/404',
-    component: () => import('@/views/404'),
+    component: () => import('@/views/error-page/404'),
     hidden: true
-  },
-  { path: '*', redirect: '/404', hidden: true } // 404 page must be placed at the end !!!
+  }
+
 ]
 
 /**
@@ -154,6 +154,42 @@ export const asyncRoutes = [
   },
 
   {
+    path: '/systemManagement',
+    component: Layout,
+    // alwaysShow: true, // will always show the root menu
+    redirect: '/systemManagement/userManagement',
+    name: 'SystemManagement',
+    meta: { title: '系统管理', icon: 'systemManagement' },
+    children: [
+      {
+        path: 'userManagement',
+        name: 'UserManagement',
+        component: () => import('@/views/table/index'),
+        meta: { title: '用户管理', icon: 'userManagement', roles: ['admin'] }
+      },
+      {
+        path: 'permissionConfig',
+        name: 'PermissionConfig',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '权限管理', icon: 'permissionConfig', roles: ['editor'] }
+      }
+    ]
+  },
+
+  {
+    path: '/icon',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/icons/index'),
+        name: 'Icons',
+        meta: { title: 'Icons', icon: 'icon', noCache: true }
+      }
+    ]
+  },
+
+  {
     path: 'external-link',
     component: Layout,
     children: [
@@ -162,7 +198,9 @@ export const asyncRoutes = [
         meta: { title: 'External Link', icon: 'link' }
       }
     ]
-  }
+  },
+
+  { path: '*', redirect: '/404', hidden: true } // 404 page must be placed at the end !!!
 ]
 
 const createRouter = () => new Router({
