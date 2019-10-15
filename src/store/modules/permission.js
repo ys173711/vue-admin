@@ -1,4 +1,5 @@
 import { asyncRoutes, constantRoutes } from '@/router'
+import { Message } from 'element-ui'
 
 /**
  * deep clone
@@ -57,6 +58,18 @@ export function filterAsyncRoutes(routes, roles) {
   return res
 }
 
+/**
+ * 将请求得到的用户 权限路由表 映射到我们前端的动态routes对象
+ * @param {array} routes 数组里元素是json对象格式
+ */
+function handleMapRoutes(routes) {
+  routes.map(route => {
+
+  })
+
+  return asyncRoutes
+}
+
 const state = {
   routes: [],
   addRoutes: []
@@ -70,16 +83,16 @@ const mutations = {
 }
 
 const actions = {
-  generateRoutes({ commit }, roles) { // 初始化用户的权限路由
+  generateRoutes({ commit }, routes) { // 初始化用户的权限路由
     return new Promise(resolve => {
-      let accessedRoutes
-      if (roles.includes('admin')) { // 'admin' 默认所有管理员权限
-        accessedRoutes = asyncRoutes || []
-      } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+      let mapRoutes
+      if (routes === undefined || (Array.isArray(routes) && routes.length === 0)) {
+        mapRoutes = asyncRoutes
       }
-      commit('SET_ROUTES', accessedRoutes) // 动态添加路由的时候使用deepClone就可以了，因为vue-router不会通过提交mutation改变路由对象
-      resolve(accessedRoutes)
+      mapRoutes = handleMapRoutes(routes)
+
+      commit('SET_ROUTES', mapRoutes) // 当vuex使用严格模式时，动态添加路由的时候使用deepClone就可以了，因为vue-router不会通过提交mutation改变路由对象
+      resolve(mapRoutes)
     })
   }
 }

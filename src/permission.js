@@ -34,9 +34,9 @@ router.beforeEach(async(to, from, next) => {
         next()
       } else {
         try {
-          const { roles } = await store.dispatch('user/getInfo')
+          const { permissionRoutesMap } = await store.dispatch('user/getInfo')
           // 根据用户的角色roles拿到 动态权限路由
-          const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+          const accessRoutes = await store.dispatch('permission/generateRoutes', permissionRoutesMap)
           // 动态添加有权访问的路由
           router.addRoutes(accessRoutes)
           // 这里还有一个小hack的地方，就是router.addRoutes之后的next()可能会失效，因为可能next()的时候路由并没有完全add完成
