@@ -5,8 +5,8 @@ const getters = {
   avatar: state => state.user.avatar,
   name: state => state.user.name,
 
-  // 用户角色 权限路由表
-  roles: state => state.user.roles,
+  // 用户 权限路由表
+  permission_addRoutes: state => state.permission.addRoutes,
   permission_routes: state => state.permission.routes
 }
 export default getters

@@ -8,7 +8,7 @@ import Layout from '@/layout'
 
 /* Router Modules */
 import errorPage_routes from './modules/errorPage'
-import permissionTest_routes from '/modules/permissionTest_routes'
+import permissionTest_routes from './modules/permissionTest'
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -20,7 +20,6 @@ import permissionTest_routes from '/modules/permissionTest_routes'
  *                                若你想不管路由下面的 children 声明的个数都显示你的根路由，你可以设置 alwaysShow: true，这样它就会忽略之前定义的规则，一直显示根路由
  * name:'router-name'             设定路由的名字，一定要填写不然使用<keep-alive>时会出现各种问题，默认按照vue组件name形式
  * meta : {
-    roles: ['admin','editor']     设置该路由进入的权限，支持多个权限叠加
     title: 'title'                设置该路由在侧边栏和面包屑中展示的名字
     icon: 'svg-name'              设置该路由的svg图标
     breadcrumb: false             默认true，如果设置为false，则不会在breadcrumb面包屑中显示
@@ -110,19 +109,6 @@ export const constantRoutes = [
     ]
   },
 
-  /* Router Modules */
-  ...errorPage_routes
-
-]
-
-/**
- * asyncRoutes
- * 需要根据 用户角色权限 动态加载的路由
- */
-export const asyncRoutes = [
-  /* Router Modules */
-  ...permissionTest_routes,
-
   {
     path: '/nested',
     component: Layout,
@@ -136,31 +122,31 @@ export const asyncRoutes = [
       {
         path: 'menu1',
         component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
+        name: 'NestedMenu1',
         meta: { title: 'Menu1' },
         children: [
           {
             path: 'menu1-1',
             component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
+            name: 'NestedMenu1-1',
             meta: { title: 'Menu1-1' }
           },
           {
             path: 'menu1-2',
             component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
+            name: 'NestedMenu1-2',
             meta: { title: 'Menu1-2' },
             children: [
               {
                 path: 'menu1-2-1',
                 component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
+                name: 'NestedMenu1-2-1',
                 meta: { title: 'Menu1-2-1' }
               },
               {
                 path: 'menu1-2-2',
                 component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
+                name: 'NestedMenu1-2-2',
                 meta: { title: 'Menu1-2-2' }
               }
             ]
@@ -168,7 +154,7 @@ export const asyncRoutes = [
           {
             path: 'menu1-3',
             component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
+            name: 'NestedMenu1-3',
             meta: { title: 'Menu1-3' }
           }
         ]
@@ -193,18 +179,37 @@ export const asyncRoutes = [
         path: 'userManagement',
         name: 'UserManagement',
         component: () => import('@/views/table/index'),
-        meta: { title: '用户管理', icon: 'userManagement', roles: ['admin'] }
+        meta: { title: '用户管理', icon: 'userManagement' }
       },
       {
         path: 'permissionConfig',
         name: 'PermissionConfig',
         component: () => import('@/views/tree/index'),
-        meta: { title: '权限管理', icon: 'permissionConfig', roles: ['editor'] }
+        meta: { title: '权限管理', icon: 'permissionConfig' }
       }
     ]
   },
 
-  { path: '*', redirect: '/404', hidden: true } // 404 page must be placed at the end !!!
+  /* Router Modules */
+  ...errorPage_routes
+
+]
+
+/**
+ * asyncRoutes
+ * 需要根据 用户角色权限 动态加载的路由
+ */
+export const asyncRoutes = [
+  /* Router Modules */
+  ...permissionTest_routes
+]
+
+/**
+ * errorRoutes
+ * 拼接在最后面
+ */
+export const errorRoutes = [
+  { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({

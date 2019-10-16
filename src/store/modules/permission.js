@@ -1,5 +1,6 @@
-import { asyncRoutes, constantRoutes } from '@/router'
-import { Message } from 'element-ui'
+import { asyncRoutes, constantRoutes, errorRoutes } from '@/router'
+// import { Message } from 'element-ui'
+// import _ from 'lodash'
 
 /**
  * deep clone
@@ -25,74 +26,55 @@ export function deepClone(obj) {
 }
 
 /**
- * Use meta.role to determine if the current user has permission
- * @param {Array} roles
- * @param route
- */
-function hasPermission(roles, route) {
-  if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
-  } else {
-    return true // 没有权限的页面
-  }
-}
-
-/**
- * Filter asynchronous routing tables by recursion
- * @param routes asyncRoutes
- * @param roles
- */
-export function filterAsyncRoutes(routes, roles) {
-  const res = []
-
-  routes.forEach(route => {
-    const tmp = { ...route }
-    if (hasPermission(roles, tmp)) {
-      if (tmp.children) { // 对路由进行递归
-        tmp.children = filterAsyncRoutes(tmp.children, roles)
-      }
-      res.push(tmp)
-    }
-  })
-
-  return res
-}
-
-/**
  * 将请求得到的用户 权限路由表 映射到我们前端的动态routes对象
- * @param {array} routes 数组里元素是json对象格式
+ * @param {collection} routesTable 前端存一份完整权限表
+ * @param {collection} routes 数组里元素是json对象格式
  */
-function handleMapRoutes(routes) {
-  routes.map(route => {
-
-  })
-
-  return asyncRoutes
+function filterRoutesMap(routesTable, routes) {
+  const fn = (routesTable, routes) => {
+    const arr = []
+    for (let i = 0; i < routes.length; i++) {
+      for (let j = 0; j < routesTable.length; j++) {
+        if (routesTable[j].menuId === routes[i].menuId) {
+          if (routes[i].children.length > 0) {
+            routesTable[j].children = fn(routesTable[j].children, routes[i].children)
+          }
+          arr.push(routesTable[j])
+        }
+      }
+    }
+    return arr
+  }
+  return fn(routesTable, routes)
 }
 
 const state = {
   routes: [],
-  addRoutes: []
+  addRoutes: ''
 }
 
 const mutations = {
-  SET_ROUTES: (state, routes) => {
+  SET_PERMISSION_ADD_ROUTES: (state, routes) => {
     state.addRoutes = routes
-    state.routes = constantRoutes.concat(routes)
+  },
+  SET_ROUTES: (state, routes) => {
+    state.routes = constantRoutes.concat(routes).concat(errorRoutes)
   }
 }
 
 const actions = {
-  generateRoutes({ commit }, routes) { // 初始化用户的权限路由
+  generatePermissionRoutes({ commit }, routes) { // 初始化用户的权限路由
     return new Promise(resolve => {
-      let mapRoutes
+      let routesMap
       if (routes === undefined || (Array.isArray(routes) && routes.length === 0)) {
-        mapRoutes = asyncRoutes
+        routesMap = []
+      } else {
+        routesMap = filterRoutesMap(asyncRoutes, routes)
       }
-      mapRoutes = handleMapRoutes(routes)
-
-      commit('SET_ROUTES', mapRoutes) // 当vuex使用严格模式时，动态添加路由的时候使用deepClone就可以了，因为vue-router不会通过提交mutation改变路由对象
-      resolve(mapRoutes)
+      // 当vuex使用严格模式时，动态添加路由的时候使用deepClone就可以了，因为vue-router不会通过提交mutation改变路由对象
+      commit('SET_PERMISSION_ADD_ROUTES', routesMap)
+      commit('SET_ROUTES', routesMap)
+      resolve(routesMap.concat(errorRoutes))
     })
   }
 }

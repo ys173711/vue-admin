@@ -6,7 +6,6 @@ const state = {
   token: getToken(),
   name: '',
   avatar: '',
-  roles: [],
   permissionRoutesMap: [] // 用户的权限路由表
 }
 
@@ -19,9 +18,6 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
-  },
-  SET_PERMISSION_ROUTES_MAP: (state, permissionRoutesMap) => {
-    state.permissionRoutesMap = permissionRoutesMap
   }
 }
 
@@ -51,11 +47,10 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { name, avatar, permissionRoutesMap } = data
+        const { name, avatar } = data
 
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
-        commit('SET_PERMISSION_ROUTES_MAP', permissionRoutesMap)
 
         resolve(data)
       }).catch(error => {
@@ -69,7 +64,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         commit('SET_TOKEN', '')
-        commit('SET_ROLES', [])
+        commit('permission/SET_PERMISSION_ADD_ROUTES', '', { root: true })
         removeToken()
         resetRouter()
         resolve()
@@ -83,7 +78,6 @@ const actions = {
   resetToken({ commit }) {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
-      commit('SET_ROLES', [])
       removeToken()
       resolve()
     })

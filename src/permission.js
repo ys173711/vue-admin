@@ -29,14 +29,14 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done()
     } else {
       // 确定用户是否已获得其权限角色
-      const hasRoles = store.getters.roles.length > 0
-      if (hasRoles) {
+      const hasPermission = Array.isArray(store.getters.permission_addRoutes)
+      if (hasPermission) {
         next()
       } else {
         try {
           const { permissionRoutesMap } = await store.dispatch('user/getInfo')
-          // 根据用户的角色roles拿到 动态权限路由
-          const accessRoutes = await store.dispatch('permission/generateRoutes', permissionRoutesMap)
+          // 根据用户拿到 动态权限路由
+          const accessRoutes = await store.dispatch('permission/generatePermissionRoutes', permissionRoutesMap)
           // 动态添加有权访问的路由
           router.addRoutes(accessRoutes)
           // 这里还有一个小hack的地方，就是router.addRoutes之后的next()可能会失效，因为可能next()的时候路由并没有完全add完成

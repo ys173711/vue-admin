@@ -5,12 +5,64 @@ const tokens = {
   },
   editor: {
     token: 'editor-token'
+  },
+  visitor: {
+    token: 'visitor-token'
   }
 }
 
 const users = {
   'admin-token': {
-    roles: ['admin'],
+    permissionRoutesMap: [
+      {
+        'menuName': 'permissionTest',
+        'menuId': '1',
+        'children': [
+          {
+            'menuName': 'menu1',
+            'menuId': '1_1',
+            'children': [
+              {
+                'menuName': 'menu1-1',
+                'menuId': '1_1_1',
+                'children': []
+              },
+              {
+                'menuName': 'menu1-2',
+                'menuId': '1_1_2',
+                'children': [
+                  {
+                    'menuName': 'menu1-1-2-1',
+                    'menuId': '1_1_2_1',
+                    'children': []
+                  },
+                  {
+                    'menuName': 'menu1-1-2-2',
+                    'menuId': '1_1_2_2',
+                    'children': []
+                  }
+                ]
+              },
+              {
+                'menuName': 'menu1-3',
+                'menuId': '1_1_3',
+                'children': []
+              }
+            ]
+          },
+          {
+            'menuName': 'menu2',
+            'menuId': '1_2',
+            'children': []
+          }
+        ]
+      },
+      {
+        'menuName': 'test',
+        'menuId': '2',
+        'children': []
+      }
+    ],
     introduction: 'I am a super administrator',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Super Admin'
@@ -18,17 +70,26 @@ const users = {
   'editor-token': {
     permissionRoutesMap: [
       {
-        'permissionTest': [
-          { 'permissionTest:Menu1': true }
+        'menuName': 'permissionTest',
+        'menuId': '1',
+        'children': [
+          {
+            'menuName': 'menu2',
+            'menuId': '1_2',
+            'children': []
+          }
         ]
-      },
-      {
-        'test': true
       }
     ],
     introduction: 'I am an editor',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Normal Editor'
+  },
+  'visitor-token': {
+    permissionRoutesMap: [],
+    introduction: 'I am an visitor',
+    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    name: 'visitor'
   }
 }
 
