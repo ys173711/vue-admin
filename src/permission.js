@@ -29,8 +29,7 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done()
     } else {
       // 确定用户是否已获得其权限角色
-      const hasPermission = Array.isArray(store.getters.permission_addRoutes)
-      if (hasPermission) {
+      if (store.getters.permission_status) {
         next()
       } else {
         try {

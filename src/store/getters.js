@@ -7,6 +7,10 @@ const getters = {
 
   // 用户 权限路由表
   permission_addRoutes: state => state.permission.addRoutes,
-  permission_routes: state => state.permission.routes
+  permission_routes: state => state.permission.routes,
+  // 用户 按钮权限
+  permission_button: state => state.permission.permission_button,
+  // 用户 权限表状态，是否已经拿到
+  permission_status: state => state.permission.permission_status
 }
 export default getters
