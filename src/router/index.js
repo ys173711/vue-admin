@@ -14,8 +14,8 @@ import permissionTest_routes from './modules/permissionTest'
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
  *
  * hidden: true                   默认 false ，当设置 true 的时候该路由不会再侧边栏出现 如401，login等页面
- * alwaysShow: true               当设置 noRedirect 的时候该路由在面包屑导航中不可被点击
- * redirect: noRedirect           当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式--如组件页面
+ * redirect: noRedirect           当设置 noRedirect 的时候该路由在面包屑导航中不可被点击
+ * alwaysShow: true               当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式--如组件页面
  *                                只有一个时，会将那个子路由当做根路由显示在侧边栏--如引导页面
  *                                若你想不管路由下面的 children 声明的个数都显示你的根路由，你可以设置 alwaysShow: true，这样它就会忽略之前定义的规则，一直显示根路由
  * name:'router-name'             设定路由的名字，一定要填写不然使用<keep-alive>时会出现各种问题，默认按照vue组件name形式
@@ -23,6 +23,7 @@ import permissionTest_routes from './modules/permissionTest'
     title: 'title'                设置该路由在侧边栏和面包屑中展示的名字
     icon: 'svg-name'              设置该路由的svg图标
     breadcrumb: false             默认true，如果设置为false，则不会在breadcrumb面包屑中显示
+    noCache: true                 默认false，如果设置为true，则不会被<keep-alive> 缓存
     activeMenu: '/example/list'   如果设置了，侧边栏会高亮显示你设置的path
   }
  */
@@ -104,7 +105,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        meta: { title: '外链', icon: 'link' }
       }
     ]
   },
@@ -191,7 +192,7 @@ export const constantRoutes = [
   },
 
   /* Router Modules */
-  ...errorPage_routes
+  errorPage_routes
 
 ]
 
@@ -201,7 +202,7 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   /* Router Modules */
-  ...permissionTest_routes
+  permissionTest_routes
 ]
 
 /**

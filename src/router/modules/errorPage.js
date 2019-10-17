@@ -1,18 +1,30 @@
 // 错误提示页
 
-// import Layout from '@/layout'
+import Layout from '@/layout'
 
-const errorPage_routes = [
-  {
-    path: '/404',
-    component: () => import('@/views/error-page/404'),
-    hidden: true // (默认 false)当设置 true 的时候该路由不会再侧边栏出现 如401，login等页面，或者如一些编辑页面/edit/1
+const errorPage_routes = {
+  path: '/error',
+  component: Layout,
+  redirect: 'noRedirect',
+  name: 'ErrorPages',
+  meta: {
+    title: '错误页',
+    icon: '404'
   },
-  {
-    path: '/401',
-    component: () => import('@/views/error-page/401'),
-    hidden: true
-  }
-]
+  children: [
+    {
+      path: '404',
+      name: 'Page404',
+      component: () => import('@/views/error-page/404'),
+      meta: { title: '404' }
+    },
+    {
+      path: '401',
+      name: 'Page401',
+      component: () => import('@/views/error-page/401'),
+      meta: { title: '401' }
+    }
+  ]
+}
 
 export default errorPage_routes
