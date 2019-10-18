@@ -56,7 +56,7 @@ const filterRoutesMap = (routesTable, routes) => {
 }
 
 const state = {
-  routes: [], // 用户的所有路由表
+  routes: [], // 用户的所有路由表 (保留)
   addRoutes: [], // 用户动态加载的权限路由
   permission_button: [], // 用户的权限按钮
   permission_status: false // 用户的权限表状态
@@ -81,20 +81,25 @@ const actions = {
   generatePermissionRoutes({ commit }, routes) { // 初始化用户的权限路由
     return new Promise(resolve => {
       let routesMap, temp
-      if (routes === undefined || (Array.isArray(routes) && routes.length === 0)) {
+      if (routes === undefined) {
         routesMap = []
       } else {
-        temp = filterRoutesMap(asyncRoutes, routes)
+        // 坑: 这里传的 asyncRoutes 是vue项目实例化时 vue-router 实例对象，因为是数组，在 filterRoutesMap 内部遍历时匹配上routes对应路由结构时，因为是把 filterRoutesMap 对应路由 push 进 routes 结构， routes 父级路由 如果跟 上个用户的 routes 父级路由 一样，则由用户权限导致子路由变化则不会引起动态路由的变化更新视图，数据已经改变但是动态路由对象变化不会更新视图
+        temp = filterRoutesMap(deepClone(asyncRoutes), routes)
         routesMap = temp.routesArr
-
-        commit('SET_PERMISSION_ADD_ROUTES', routesMap)
-        commit('SET_ROUTES', routesMap)
-        commit('SET_PERMISSION_BUTTON', temp.btnArr)
       }
-      // 当vuex使用严格模式时，动态添加路由的时候使用deepClone就可以了，因为vue-router不会通过提交mutation改变路由对象
+      commit('SET_PERMISSION_ADD_ROUTES', routesMap)
+      commit('SET_ROUTES', routesMap)
+      commit('SET_PERMISSION_BUTTON', temp.btnArr)
       commit('SET_PERMISSION_STATUS', true)
       resolve(routesMap.concat(errorRoutes))
     })
+  },
+  resetPermissionRoutes({ commit }) { // 重置用户权限路由
+    commit('SET_PERMISSION_STATUS', false)
+    commit('SET_PERMISSION_ADD_ROUTES', [])
+    commit('SET_ROUTES', [])
+    commit('SET_PERMISSION_BUTTON', [])
   }
 }
 

@@ -60,16 +60,12 @@ const actions = {
   },
 
   // user logout
-  logout({ commit, state }) {
+  logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         commit('SET_TOKEN', '')
 
-        // 初始化vuex的权限路由
-        commit('permission/SET_PERMISSION_STATUS', false, { root: true })
-        commit('permission/SET_PERMISSION_ADD_ROUTES', [], { root: true })
-        commit('permission/SET_ROUTES', [], { root: true })
-        commit('permission/SET_PERMISSION_BUTTON', [], { root: true })
+        dispatch('permission/resetPermissionRoutes', {}, { root: true })
 
         removeToken()
         resetRouter()
