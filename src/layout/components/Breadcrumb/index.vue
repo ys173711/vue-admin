@@ -1,6 +1,6 @@
 <template>
   <el-breadcrumb class="app-breadcrumb" separator="/">
-    <transition-group name="breadcrumb">
+    <transition-group name="breadcrumb" tag="nav">
       <el-breadcrumb-item v-for="(item,index) in levelList" :key="item.path">
         <span v-if="item.redirect==='noRedirect'||index==levelList.length-1" class="no-redirect">{{ item.meta.title }}</span>
         <a v-else @click.prevent="handleLink(item)">{{ item.meta.title }}</a>
@@ -28,12 +28,13 @@ export default {
   },
   methods: {
     getBreadcrumb() {
-      // only show routes with meta.title
+      // 面包屑导航仅显示有 meta.title 的路由
       let matched = this.$route.matched.filter(item => item.meta && item.meta.title)
-      const first = matched[0]
 
+      // 如果不是首页，则面包屑导航数组第一个显示首页路由
+      const first = matched[0]
       if (!this.isDashboard(first)) {
-        matched = [{ path: '/dashboard', meta: { title: 'Dashboard' }}].concat(matched)
+        matched = [{ path: '/dashboard', meta: { title: '首页' }}].concat(matched)
       }
 
       this.levelList = matched.filter(item => item.meta && item.meta.title && item.meta.breadcrumb !== false)
@@ -47,9 +48,10 @@ export default {
     },
     pathCompile(path) {
       // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
+      // 解决动态路由传值问题，例如 /user/:id
       const { params } = this.$route
-      var toPath = pathToRegexp.compile(path)
-      return toPath(params)
+      const url = pathToRegexp.compile(path)(params)
+      return url
     },
     handleLink(item) {
       const { redirect, path } = item
