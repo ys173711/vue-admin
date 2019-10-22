@@ -5,3 +5,9 @@
     </el-alert>
   </div>
 </template>
+
+<script>
+export default {
+  name: 'Menu1c1'
+}
+</script>

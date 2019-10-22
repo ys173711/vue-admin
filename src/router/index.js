@@ -32,6 +32,7 @@ import permissionTest_routes from './modules/permissionTest'
 // 所有权限通用路由表
 // 如首页和登录页和一些不用权限的公用页面
 // detail: https://panjiachen.github.io/vue-element-admin-site/zh/guide/essentials/router-and-nav.html
+
 export const constantRoutes = [
   {
     path: '/login',
@@ -202,6 +203,7 @@ export const constantRoutes = [
  * asyncRoutes
  * 需要根据 用户角色权限 动态加载的路由
  */
+
 export const asyncRoutes = [
   /* Router Modules */
   permissionTest_routes

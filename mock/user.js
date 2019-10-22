@@ -13,105 +13,129 @@ const tokens = {
 
 const users = {
   'admin-token': {
-    permissionRoutesMap: [
-      {
-        'menuName': 'permissionTest',
-        'menuId': '1',
-        'menuType': 'M', // M: 根目录; C: 子目录; F: 按钮权限
-        'children': [
-          {
-            'menuName': 'menu1',
-            'menuId': '1_1',
-            'menuType': 'C',
-            'children': [
-              {
-                'menuName': 'menu1-1',
-                'menuId': '1_1_1',
-                'menuType': 'C',
-                'children': []
-              },
-              {
-                'menuName': 'menu1-2',
-                'menuId': '1_1_2',
-                'menuType': 'C',
-                'children': [
-                  {
-                    'menuName': 'menu1-1-2-1',
-                    'menuId': '1_1_2_1',
-                    'menuType': 'C',
-                    'children': []
-                  },
-                  {
-                    'menuName': 'menu1-1-2-2',
-                    'menuId': '1_1_2_2',
-                    'menuType': 'C',
-                    'children': []
-                  }
-                ]
-              },
-              {
-                'menuName': 'menu1-3',
-                'menuId': '1_1_3',
-                'menuType': 'C',
-                'children': []
-              }
-            ]
-          },
-          {
-            'menuName': 'menu2',
-            'menuId': '1_2',
-            'menuType': 'C',
-            'children': [
-              {
-                'menuName': '新增',
-                'menuId': '1_2_01',
-                'menuType': 'F',
-                'children': []
-              },
-              {
-                'menuName': '删除',
-                'menuId': '1_2_02',
-                'menuType': 'F',
-                'children': []
-              }
-            ]
-          }
-        ]
+    permissionRoutesMap: [{
+      path: '/permissionTest',
+      component: 'Layout',
+      redirect: '/permissionTest/menu1/menu1-1',
+      name: 'PermissionTest',
+      alwaysShow: true,
+      meta: {
+        title: '权限测试页',
+        icon: 'lock'
       },
-      {
-        'menuName': 'test',
-        'menuId': '2',
-        'menuType': 'M',
-        'children': []
-      }
-    ],
+      children: [
+        {
+          path: 'menu1',
+          component: 'Menu1',
+          name: 'Menu1',
+          meta: { title: 'Menu1' },
+          children: [
+            {
+              path: 'menu1-1',
+              component: 'Menu1c1',
+              name: 'Menu1c1',
+              meta: { title: 'Menu1-1' }
+            },
+            {
+              path: 'menu1-2',
+              component: 'Menu1c2',
+              name: 'Menu1c2',
+              meta: { title: 'Menu1-2' },
+              children: [
+                {
+                  path: 'menu1-2-1',
+                  component: 'Menu1c2c1',
+                  name: 'Menu1c2c1',
+                  meta: { title: 'Menu1-2-1' }
+                },
+                {
+                  path: 'menu1-2-2',
+                  component: 'Menu1c2c2',
+                  name: 'Menu1c2c2',
+                  meta: { title: 'Menu1-2-2' }
+                }
+              ]
+            },
+            {
+              path: 'menu1-3',
+              component: 'Menu1c3',
+              name: 'Menu1c3',
+              meta: { title: 'Menu1-3' }
+            }
+          ]
+        },
+        {
+          path: 'menu2',
+          name: 'Menu2',
+          component: 'Menu2',
+          meta: { title: 'menu2' }
+        }
+      ]
+    }],
     introduction: 'I am a super administrator',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Super Admin'
   },
   'editor-token': {
-    permissionRoutesMap: [
-      {
-        'menuName': 'permissionTest',
-        'menuId': '1',
-        'menuType': 'M',
-        'children': [
-          {
-            'menuName': 'menu2',
-            'menuId': '1_2',
-            'menuType': 'C',
-            'children': [
-              {
-                'menuName': '新增',
-                'menuId': '1_2_01',
-                'menuType': 'F',
-                'children': []
-              }
-            ]
-          }
-        ]
-      }
-    ],
+    permissionRoutesMap: [{
+      path: '/permissionTest',
+      component: 'Layout',
+      redirect: '/permissionTest/menu1/menu1-1',
+      name: 'PermissionTest',
+      alwaysShow: true,
+      meta: {
+        title: '权限测试页',
+        icon: 'lock'
+      },
+      children: [
+        {
+          path: 'menu1',
+          component: 'Menu1',
+          name: 'Menu1',
+          meta: { title: 'Menu1' },
+          children: [
+            {
+              path: 'menu1-1',
+              component: 'Menu1c1',
+              name: 'Menu1c1',
+              meta: { title: 'Menu1-1' }
+            },
+            {
+              path: 'menu1-2',
+              component: 'Menu1c2',
+              name: 'Menu1c2',
+              meta: { title: 'Menu1-2' },
+              children: [
+                {
+                  path: 'menu1-2-1',
+                  component: 'Menu1c2c1',
+                  name: 'Menu1c2c1',
+                  meta: { title: 'Menu1-2-1' }
+                }
+                /* {
+                  path: 'menu1-2-2',
+                  component: 'Menu1c2c2',
+                  name: 'Menu1c2c2',
+                  meta: { title: 'Menu1-2-2' }
+                } */
+              ]
+            },
+            {
+              path: 'menu1-3',
+              component: 'Menu1c3',
+              name: 'Menu1c3',
+              meta: { title: 'Menu1-3' }
+            }
+          ]
+        }
+        /* {
+          path: 'menu2',
+          name: 'Menu2',
+          component: 'Menu2',
+          meta: { title: 'menu2' }
+        } */
+      ]
+    }],
     introduction: 'I am an editor',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Normal Editor'
