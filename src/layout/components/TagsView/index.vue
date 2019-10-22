@@ -70,7 +70,7 @@ export default {
       return route.path === this.$route.path
     },
     isAffix(tag) {
-      return tag.meta && tag.meta.affix
+      return tag.meta && tag.meta.affix // 是否固定
     },
     filterAffixTags(routes, basePath = '/') {
       let tags = []
