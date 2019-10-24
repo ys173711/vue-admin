@@ -4,21 +4,44 @@ import { constantRoutes, errorRoutes } from '@/router'
 
 const localMap = {
   'Layout': require('@/layout').default,
-  'Menu1': () => import('@/views/nested/menu1'),
-  'Menu1c1': () => import('@/views/nested/menu1/menu1-1'),
-  'Menu1c2': () => import('@/views/nested/menu1/menu1-2'),
-  'Menu1c2c1': () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-  'Menu1c2c2': () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-  'Menu1c3': () => import('@/views/nested/menu1/menu1-3'),
-  'Menu2': () => import('@/views/nested/menu2')
+  'Customer': () => import('@/views/customer'),
+  'Set': () => import('@/views/customer/set'),
+  'My': () => import('@/views/customer/my'),
+  'Sale': () => import('@/views/sale'),
+  'Price': () => import('@/views/sale/price'),
+  'Order': () => import('@/views/sale/order'),
+  'History': () => import('@/views/sale/order/history'),
+  'Doing': () => import('@/views/sale/order/doing'),
+  'Srm': () => import('@/views/srm'),
+  'All': () => import('@/views/srm/all')
+
 }
 const handleRoutesMap = serverMap => {
   return serverMap.map((route, i) => {
-    route.component = localMap[route.component]
-    if (route.children && route.children.length > 0) {
-      route.children = handleRoutesMap(route.children)
+    const obj = {
+      meta: {
+        title: route.menuName,
+        icon: route.menuIcon
+      }
     }
-    return route
+    if (route.parentId === 0) { // 如果是菜单栏根目录
+      obj.path = `/${route.menuIcon}`
+      obj.name = route.menuIcon.charAt(0).toUpperCase() + route.menuIcon.slice(1)
+      obj.component = localMap['Layout'] // 菜单根目录一致用 Layout
+    } else {
+      route.menuUrl = route.menuUrl === null ? '' : route.menuUrl
+      obj.path = route.menuUrl.slice(route.menuUrl.lastIndexOf('/') + 1)
+      obj.name = obj.path.charAt(0).toUpperCase() + obj.path.slice(1)
+      obj.component = localMap[obj.name]
+    }
+    if (route.children) {
+      if (route.children.length === 1) {
+        obj.alwaysShow = true // 子菜单只有一个时，父级菜单也显示
+      }
+      obj.children = handleRoutesMap(route.children)
+    }
+
+    return obj
   })
 }
 

@@ -1,55 +1,57 @@
 <template>
-  <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+  <div ref="login" class="login-container" @mouseover.once="animation_gradient">
+    <div class="banxin">
+      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left" @submit.native.prevent>
 
-      <div class="title-container">
-        <h3 class="title">系统登录</h3>
-      </div>
+        <div class="title-container">
+          <h3 class="title">Hi,</h3>
+          <h3 class="title">欢迎登录深圳拓保DCP</h3>
+        </div>
+        <div class="form-item-title">账号</div>
+        <el-form-item prop="username">
+          <el-input
+            ref="username"
+            v-model="loginForm.username"
+            placeholder="Username"
+            name="username"
+            type="text"
+            tabindex="1"
+            auto-complete="on"
+          />
+        </el-form-item>
+        <div class="form-item-title">密码
+          <span class="show-pwd" @click="showPwd">
+            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          </span>
+        </div>
+        <el-form-item prop="password">
+          <el-input
+            :key="passwordType"
+            ref="password"
+            v-model="loginForm.password"
+            :type="passwordType"
+            placeholder="Password"
+            name="password"
+            tabindex="2"
+            auto-complete="on"
+            @keyup.enter.native="handleLogin"
+          />
+        </el-form-item>
+        <div class="keepPassword">
+          <el-checkbox v-model="keepPassword">记住密码</el-checkbox>
+          <span>忘记密码？</span>
+        </div>
+        <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="username"
-          v-model="loginForm.username"
-          placeholder="Username"
-          name="username"
-          type="text"
-          tabindex="1"
-          auto-complete="on"
-        />
-      </el-form-item>
+        <div class="tips">
+          <div style="margin-right:20px;font-weight:bold;">Tips:</div>
+          <div style="margin-right:20px;">username: {{ user_list }}</div>
+          <div> password: any</div>
+        </div>
 
-      <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
-        <el-input
-          :key="passwordType"
-          ref="password"
-          v-model="loginForm.password"
-          :type="passwordType"
-          placeholder="Password"
-          name="password"
-          tabindex="2"
-          auto-complete="on"
-          @keyup.enter.native="handleLogin"
-        />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-        </span>
-      </el-form-item>
-
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
-
-      <div class="tips">
-        <span style="margin-right:20px;font-weight:bold;">Tips:</span>
-        <span style="margin-right:20px;">username: {{ user_list }}</span>
-        <span> password: any</span>
-      </div>
-
-    </el-form>
+      </el-form>
+    </div>
+    <div class="copyright">Copyright © Shenzhen Tobo Software Co.,Ltd</div>
   </div>
 </template>
 
@@ -61,14 +63,14 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('请输入正确用户名'))
+        callback(new Error('格式错误'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('密码长度不少于6位'))
+        callback(new Error('格式错误'))
       } else {
         callback()
       }
@@ -86,7 +88,8 @@ export default {
       loading: false,
       passwordType: 'password',
       redirect: undefined,
-      user_list: valid_map
+      user_list: valid_map,
+      keepPassword: false // 是否记住密码
     }
   },
   watch: {
@@ -112,7 +115,7 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
+          this.$store.dispatch('user/login', this.loginForm).then((response) => {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch(() => {
@@ -123,6 +126,21 @@ export default {
           return false
         }
       })
+    },
+    animation_gradient() { // 登录页，渐变动画
+      let b = 0
+      let e
+      const c = this.$refs.login
+      const d = setInterval(function() {
+        if (b > parseInt(c.offsetWidth + 50)) { clearInterval(d) }
+        e = b + 15
+        c.style['-webkit-mask'] =
+        // (500, 300)起点
+        `-webkit-gradient(radial, 500 300, ${b}, 500 300, ${e}, from(rgba(255, 255, 255,1)), color-stop(0.5,rgba(255, 255, 255, 0.2)), to(rgba(255, 255, 255,1)))`
+        // (0, 0)起点
+        // `-webkit-gradient(radial, 0 0,${b}, 0 0, ${e}, from(rgba(255, 255, 255,1)), color-stop(0.5,rgba(255, 255, 255, 0.2)), to(rgba(255, 255, 255,1)))`
+        b++
+      }, 0)
     }
   }
 }
@@ -131,10 +149,7 @@ export default {
 <style lang="scss">
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
-$bg:#283443;
-$light_gray:#fff;
-$cursor: #fff;
+$cursor: #000;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .el-input input {
@@ -142,62 +157,110 @@ $cursor: #fff;
   }
 }
 
-/* reset element-ui css */
+/* 覆盖 element-ui 样式 */
 .login-container {
   .el-input {
     display: inline-block;
     height: 47px;
-    width: 85%;
+    width: 100%;
 
     input {
       background: transparent;
       border: 0px;
       -webkit-appearance: none;
       border-radius: 0px;
-      padding: 12px 5px 12px 15px;
-      color: $light_gray;
+      padding: 12px 5px 12px 0;
+      color: #21333F;
       height: 47px;
       caret-color: $cursor;
+      border-bottom: 1px solid #CACACA ;
 
       &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
+        box-shadow: 0 0 0px 1000px #CACACA inset !important;
         -webkit-text-fill-color: $cursor !important;
       }
     }
   }
 
+  .el-form-item.is-success .el-input__inner,
+  .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus {
+      border-color: #CACACA;
+  }
   .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    color: #454545;
+    background-color: transparent;
+    font-size: 16px;
+    color: #21333F;
+    position: relative;
+    .el-form-item__content {
+      .el-form-item__error {
+        position: absolute;
+        right: 0;
+        top: 0;
+        left: auto;
+        height: calc(100%-1px);
+        width: 88px;
+        line-height: 40px;
+        text-align: right;
+        background-color: #fff;
+      }
+    }
+  }
+
+  .keepPassword {
+    // 覆盖element-ui样式
+    .el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
+      background: #fff;
+    }
+    .el-checkbox__inner::after {
+      border-color: #2C9EF7;
+    }
   }
 }
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
 $dark_gray:#889aa4;
 $light_gray:#eee;
+$main_hue: #2C9EF7; // 主色调
+
+@media screen and (max-width: 1480px) {
+  .login-container {
+    background: none !important;
+    .banxin {
+      background: url('../../assets/login/login_bg@2x.png') no-repeat 0 0;
+      background-size: cover;
+    }
+  }
+}
 
 .login-container {
-  min-height: 100%;
+  height: 100%;
   width: 100%;
-  background-color: $bg;
+  min-width: 1480px;
+  min-height: 820px;
   overflow: hidden;
+  position: relative;
+  background: url('../../assets/login/login_bg@2x.png') no-repeat 0 0;
+  background-size: cover;
+
+  .banxin {
+    position: relative;
+    width: 1480px;
+    height: 100%;
+    margin: 0 auto;
+  }
 
   .login-form {
-    position: relative;
-    width: 520px;
-    max-width: 100%;
-    padding: 160px 35px 0;
+    position: absolute;
+    top: 326px;
+    right: 0;
+    width: 320px;
     margin: 0 auto;
-    overflow: hidden;
   }
 
   .tips {
     font-size: 14px;
-    color: #fff;
+    color: #000;
     margin-bottom: 10px;
 
     span {
@@ -217,24 +280,61 @@ $light_gray:#eee;
 
   .title-container {
     position: relative;
+    margin-bottom: 80px;
 
     .title {
-      font-size: 26px;
-      color: $light_gray;
-      margin: 0px auto 40px auto;
-      text-align: center;
+      font-size: 24px;
+      color: $main_hue;
+      margin-bottom: 9px;
+      margin-top: 0;
+      text-align: left;
       font-weight: bold;
     }
+  }
+
+  .form-item-title {
+    font-size: 14px;
+    color: #5F717D;
+    font-family: Microsoft YaHei;
+    position: relative;
   }
 
   .show-pwd {
     position: absolute;
     right: 10px;
-    top: 7px;
+    top: 0;
     font-size: 16px;
     color: $dark_gray;
     cursor: pointer;
     user-select: none;
+  }
+
+  .keepPassword {
+    color: $main_hue;
+    font-size: 14px;
+    font-family: MicrosoftYaHei;
+    position: relative;
+    margin-bottom: 40px;
+
+    span {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      cursor: pointer;
+    }
+  }
+
+  .copyright {
+    font-size: 14px;
+    font-weight: bold;
+    font-family: MicrosoftYaHei;
+    color: #85B5FF;
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 22px;
   }
 }
 </style>

@@ -13,135 +13,319 @@ const tokens = {
 
 const users = {
   'admin-token': {
-    permissionRoutesMap: [{
-      path: '/permissionTest',
-      component: 'Layout',
-      redirect: '/permissionTest/menu1/menu1-1',
-      name: 'PermissionTest',
-      alwaysShow: true,
-      meta: {
-        title: '权限测试页',
-        icon: 'lock'
+    'result': {
+      'resultCode': 0,
+      'msg': 'success',
+      'resultData': null
+    },
+    'menus': [
+      {
+        'id': 1,
+        'parentId': 0,
+        'menuName': '客户管理',
+        'menuIcon': 'customer',
+        'menuUrl': null,
+        'menuSort': 0,
+        'children': [
+          {
+            'id': 4,
+            'parentId': 1,
+            'menuName': '客户设置',
+            'menuIcon': null,
+            'menuUrl': 'customer/set',
+            'menuSort': 0,
+            'children': null
+          },
+          {
+            'id': 5,
+            'parentId': 1,
+            'menuName': '我的客户',
+            'menuIcon': null,
+            'menuUrl': 'customer/my',
+            'menuSort': 1,
+            'children': null
+          }
+        ]
       },
-      children: [
-        {
-          path: 'menu1',
-          component: 'Menu1',
-          name: 'Menu1',
-          meta: { title: 'Menu1' },
-          children: [
-            {
-              path: 'menu1-1',
-              component: 'Menu1c1',
-              name: 'Menu1c1',
-              meta: { title: 'Menu1-1' }
-            },
-            {
-              path: 'menu1-2',
-              component: 'Menu1c2',
-              name: 'Menu1c2',
-              meta: { title: 'Menu1-2' },
-              children: [
-                {
-                  path: 'menu1-2-1',
-                  component: 'Menu1c2c1',
-                  name: 'Menu1c2c1',
-                  meta: { title: 'Menu1-2-1' }
-                },
-                {
-                  path: 'menu1-2-2',
-                  component: 'Menu1c2c2',
-                  name: 'Menu1c2c2',
-                  meta: { title: 'Menu1-2-2' }
-                }
-              ]
-            },
-            {
-              path: 'menu1-3',
-              component: 'Menu1c3',
-              name: 'Menu1c3',
-              meta: { title: 'Menu1-3' }
-            }
-          ]
-        },
-        {
-          path: 'menu2',
-          name: 'Menu2',
-          component: 'Menu2',
-          meta: { title: 'menu2' }
-        }
-      ]
-    }],
+      {
+        'id': 2,
+        'parentId': 0,
+        'menuName': '销售管理',
+        'menuIcon': 'sale',
+        'menuUrl': null,
+        'menuSort': 1,
+        'children': [
+          {
+            'id': 6,
+            'parentId': 2,
+            'menuName': '报价',
+            'menuIcon': null,
+            'menuUrl': 'sale/price',
+            'menuSort': 0,
+            'children': null
+          },
+          {
+            'id': 7,
+            'parentId': 2,
+            'menuName': '订单',
+            'menuIcon': null,
+            'menuUrl': 'sale/order',
+            'menuSort': 1,
+            'children': [
+              {
+                'id': 9,
+                'parentId': 7,
+                'menuName': '历史订单',
+                'menuIcon': null,
+                'menuUrl': 'sale/order/history',
+                'menuSort': 0,
+                'children': null
+              },
+              {
+                'id': 10,
+                'parentId': 7,
+                'menuName': '正在跟进订单',
+                'menuIcon': null,
+                'menuUrl': 'sale/order/doing',
+                'menuSort': 1,
+                'children': null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        'id': 3,
+        'parentId': 0,
+        'menuName': '供应商管理',
+        'menuIcon': 'srm',
+        'menuUrl': null,
+        'menuSort': 2,
+        'children': [
+          {
+            'id': 8,
+            'parentId': 3,
+            'menuName': '全部供应商',
+            'menuIcon': null,
+            'menuUrl': 'srm/all',
+            'menuSort': 0,
+            'children': null
+          }
+        ]
+      }
+    ],
     introduction: 'I am a super administrator',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Super Admin'
   },
   'editor-token': {
-    permissionRoutesMap: [{
-      path: '/permissionTest',
-      component: 'Layout',
-      redirect: '/permissionTest/menu1/menu1-1',
-      name: 'PermissionTest',
-      alwaysShow: true,
-      meta: {
-        title: '权限测试页',
-        icon: 'lock'
+    'result': {
+      'resultCode': 0,
+      'msg': 'success',
+      'resultData': null
+    },
+    'menus': [
+      {
+        'id': 1,
+        'parentId': 0,
+        'menuName': '客户管理',
+        'menuIcon': 'customer',
+        'menuUrl': null,
+        'menuSort': 0,
+        'children': [
+          {
+            'id': 4,
+            'parentId': 1,
+            'menuName': '客户设置',
+            'menuIcon': null,
+            'menuUrl': 'customer/set',
+            'menuSort': 0,
+            'children': null
+          },
+          {
+            'id': 5,
+            'parentId': 1,
+            'menuName': '我的客户',
+            'menuIcon': null,
+            'menuUrl': 'customer/my',
+            'menuSort': 1,
+            'children': null
+          }
+        ]
       },
-      children: [
-        {
-          path: 'menu1',
-          component: 'Menu1',
-          name: 'Menu1',
-          meta: { title: 'Menu1' },
-          children: [
-            {
-              path: 'menu1-1',
-              component: 'Menu1c1',
-              name: 'Menu1c1',
-              meta: { title: 'Menu1-1' }
-            },
-            {
-              path: 'menu1-2',
-              component: 'Menu1c2',
-              name: 'Menu1c2',
-              meta: { title: 'Menu1-2' },
-              children: [
-                {
-                  path: 'menu1-2-1',
-                  component: 'Menu1c2c1',
-                  name: 'Menu1c2c1',
-                  meta: { title: 'Menu1-2-1' }
-                }
-                /* {
-                  path: 'menu1-2-2',
-                  component: 'Menu1c2c2',
-                  name: 'Menu1c2c2',
-                  meta: { title: 'Menu1-2-2' }
-                } */
-              ]
-            },
-            {
-              path: 'menu1-3',
-              component: 'Menu1c3',
-              name: 'Menu1c3',
-              meta: { title: 'Menu1-3' }
-            }
-          ]
-        }
-        /* {
-          path: 'menu2',
-          name: 'Menu2',
-          component: 'Menu2',
-          meta: { title: 'menu2' }
-        } */
-      ]
-    }],
+      {
+        'id': 2,
+        'parentId': 0,
+        'menuName': '销售管理',
+        'menuIcon': 'sale',
+        'menuUrl': null,
+        'menuSort': 1,
+        'children': [
+          {
+            'id': 6,
+            'parentId': 2,
+            'menuName': '报价',
+            'menuIcon': null,
+            'menuUrl': 'sale/price',
+            'menuSort': 0,
+            'children': null
+          },
+          {
+            'id': 7,
+            'parentId': 2,
+            'menuName': '订单',
+            'menuIcon': null,
+            'menuUrl': 'sale/order',
+            'menuSort': 1,
+            'children': [
+              /* {
+                'id': 9,
+                'parentId': 7,
+                'menuName': '历史订单',
+                'menuIcon': null,
+                'menuUrl': 'sale/order/history',
+                'menuSort': 0,
+                'children': null
+              }, */
+              {
+                'id': 10,
+                'parentId': 7,
+                'menuName': '正在跟进订单',
+                'menuIcon': null,
+                'menuUrl': 'sale/order/doing',
+                'menuSort': 1,
+                'children': null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        'id': 3,
+        'parentId': 0,
+        'menuName': '供应商管理',
+        'menuIcon': 'srm',
+        'menuUrl': null,
+        'menuSort': 2,
+        'children': [
+          {
+            'id': 8,
+            'parentId': 3,
+            'menuName': '全部供应商',
+            'menuIcon': null,
+            'menuUrl': 'srm/all',
+            'menuSort': 0,
+            'children': null
+          }
+        ]
+      }
+    ],
     introduction: 'I am an editor',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Normal Editor'
   },
   'visitor-token': {
-    permissionRoutesMap: [],
+    'result': {
+      'resultCode': 0,
+      'msg': 'success',
+      'resultData': null
+    },
+    'menus': [
+      {
+        'id': 1,
+        'parentId': 0,
+        'menuName': '客户管理',
+        'menuIcon': 'customer',
+        'menuUrl': null,
+        'menuSort': 0,
+        'children': [
+          /* {
+            'id': 4,
+            'parentId': 1,
+            'menuName': '客户设置',
+            'menuIcon': null,
+            'menuUrl': 'customer/set',
+            'menuSort': 0,
+            'children': null
+          }, */
+          {
+            'id': 5,
+            'parentId': 1,
+            'menuName': '我的客户',
+            'menuIcon': null,
+            'menuUrl': 'customer/my',
+            'menuSort': 1,
+            'children': null
+          }
+        ]
+      },
+      {
+        'id': 2,
+        'parentId': 0,
+        'menuName': '销售管理',
+        'menuIcon': 'sale',
+        'menuUrl': null,
+        'menuSort': 1,
+        'children': [
+          {
+            'id': 6,
+            'parentId': 2,
+            'menuName': '报价',
+            'menuIcon': null,
+            'menuUrl': 'sale/price',
+            'menuSort': 0,
+            'children': null
+          },
+          {
+            'id': 7,
+            'parentId': 2,
+            'menuName': '订单',
+            'menuIcon': null,
+            'menuUrl': 'sale/order',
+            'menuSort': 1,
+            'children': [
+              {
+                'id': 9,
+                'parentId': 7,
+                'menuName': '历史订单',
+                'menuIcon': null,
+                'menuUrl': 'sale/order/history',
+                'menuSort': 0,
+                'children': null
+              },
+              {
+                'id': 10,
+                'parentId': 7,
+                'menuName': '正在跟进订单',
+                'menuIcon': null,
+                'menuUrl': 'sale/order/doing',
+                'menuSort': 1,
+                'children': null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        'id': 3,
+        'parentId': 0,
+        'menuName': '供应商管理',
+        'menuIcon': 'srm',
+        'menuUrl': null,
+        'menuSort': 2,
+        'children': [
+          {
+            'id': 8,
+            'parentId': 3,
+            'menuName': '全部供应商',
+            'menuIcon': null,
+            'menuUrl': 'srm/all',
+            'menuSort': 0,
+            'children': null
+          }
+        ]
+      }
+    ],
     introduction: 'I am an visitor',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'visitor'
@@ -161,20 +345,28 @@ export default [
       if (token) {
         if (password.length) {
           return { // 登陆成功
-            code: 20000,
-            message: '登陆成功',
-            data: token
+            'result': {
+              'resultCode': 20000,
+              'msg': '登陆成功',
+              'resultData': token
+            }
           }
         } else {
           return {
-            code: 60203,
-            message: '密码错误'
+            'result': {
+              'resultCode': 60203,
+              'msg': '密码错误',
+              'resultData': null
+            }
           }
         }
       } else {
         return {
-          code: 60204,
-          message: '不存在此用户'
+          'result': {
+            'resultCode': 60204,
+            'msg': '不存在此用户',
+            'resultData': null
+          }
         }
       }
     }
@@ -191,15 +383,15 @@ export default [
       // mock error
       if (!info) {
         return {
-          code: 50008,
-          message: 'Login failed, unable to get user details.'
+          'result': {
+            'resultCode': 50008,
+            'msg': '登陆失败，无法获取用户相关信息',
+            'resultData': null
+          }
         }
       }
 
-      return {
-        code: 20000,
-        data: info
-      }
+      return info
     }
   },
 
@@ -209,8 +401,11 @@ export default [
     type: 'post',
     response: _ => {
       return {
-        code: 20000,
-        data: 'success'
+        'result': {
+          'resultCode': 20001,
+          'msg': '登出成功',
+          'resultData': null
+        }
       }
     }
   }

@@ -39,17 +39,41 @@ service.interceptors.response.use(
    * 通过自定义代码确定请求状态
    */
   ctx => {
-    const res = ctx.data
-
-    if (res.code !== 20000) {
+    const data = ctx.data
+    const res = data.result
+    if (res.resultCode !== 0) {
+      if (res.resultCode === 20000) {
+        Message({
+          message: '登录成功',
+          type: 'success',
+          duration: 5 * 1000
+        })
+        return data
+      }
+      if (res.resultCode === 20001) {
+        Message({
+          message: '登出成功',
+          type: 'success',
+          duration: 5 * 1000
+        })
+        return data
+      }
+      if (res.resultCode === 60203 || res.resultCode === 60204) {
+        Message({
+          message: res.msg,
+          type: 'info',
+          duration: 5 * 1000
+        })
+        return Promise.reject(new Error(res.message || 'Error'))
+      }
       Message({
-        message: res.message || 'Error',
+        message: res.msg || 'Error',
         type: 'error',
         duration: 5 * 1000
       })
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+      if (res.resultCode === 50008 || res.resultCode === 50012 || res.resultCode === 50014) {
       // to re-login
         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
           confirmButtonText: 'Re-Login',
@@ -63,7 +87,7 @@ service.interceptors.response.use(
       }
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
-      return res
+      return data
     }
   },
   error => {
