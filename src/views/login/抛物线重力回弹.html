@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script>
+			onload = function(){
+				
+				var btn = document.getElementsByTagName("button")[0];
+				var box = document.getElementById("box");
+				
+				//点击按钮
+				btn.onclick = function(){
+					
+					var xspeed = 2; //水平方向的速度 -20-20
+					var yspeed = -20; //垂直方向的速度 -20-20
+					
+					setInterval(function(){
+						yspeed++;
+						
+						box.style.left = box.offsetLeft + xspeed + "px";
+						box.style.top = box.offsetTop + yspeed + "px";
+						
+						if (box.offsetTop >= document.documentElement.clientHeight-box.offsetHeight) {
+							box.style.top = document.documentElement.clientHeight-box.offsetHeight + "px";
+							yspeed *= -0.8;
+						}
+						
+					}, 50);
+					
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<button>按钮</button>
+		<div id="box" style="width: 50px;height: 50px; background: red; position: absolute;left: 100px; top: 200px; border-radius: 50%;"></div>
+	</body>
+</html>
