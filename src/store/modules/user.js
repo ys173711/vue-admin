@@ -1,12 +1,14 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import { setLocalStorage } from '@/utils/localStorage'
 
 const state = {
   token: getToken(),
   name: '',
   avatar: '',
-  permissionRoutesMap: [] // 用户的权限路由表
+  permissionRoutesMap: [], // 用户的权限路由表
+  keepPassword: false // 是否让浏览器记住密码
 }
 
 const mutations = {
@@ -18,15 +20,23 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_KEEPPASSWORD: (state) => {
+    state.keepPassword = !state.keepPassword
   }
 }
 
 const actions = {
   // user login
-  login({ commit }, userInfo) {
+  login({ state, commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      const account = { username: username.trim(), password: password }
+      login(account).then(response => {
+        // 登录成功后，若用户点击了 记住密码，把用户存入 localstorage
+        if (state.keepPassword) {
+          setLocalStorage(account, 'account')
+        }
         const data = response.result
         commit('SET_TOKEN', data.resultData.token) // 'admin-token'
         setToken(data.resultData.token)
@@ -75,6 +85,11 @@ const actions = {
       removeToken()
       resolve()
     })
+  },
+
+  // 登录页 用户点击 是否 记住密码
+  toggleKeepPassword({ commit }) {
+    commit('SET_KEEPPASSWORD')
   }
 }
 

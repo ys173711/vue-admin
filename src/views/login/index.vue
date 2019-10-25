@@ -1,7 +1,7 @@
 <template>
   <div ref="login" class="login-container" @mouseover.once="animation_gradient">
     <div class="banxin">
-      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left" @submit.native.prevent>
+      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="off" label-position="left" @submit.native.prevent>
 
         <div class="title-container">
           <h3 class="title">Hi,</h3>
@@ -16,8 +16,18 @@
             name="username"
             type="text"
             tabindex="1"
-            auto-complete="on"
+            autocomplete="off"
+            @focus="toggleAutocomplete(true)"
           />
+          <ul v-show="isShowAutocomplete && toggleShowAutocomplete" class="autocomplete">
+            <li v-for="(item,i) in autocompleteList" :key="i">
+              {{ item.username }}
+              <button class="deleteBtn" @click="deleteAutocompleteItem(i)" />
+            </li>
+            <li>
+              <span @click="deleteAutocompleteAll">清空所有</span>
+            </li>
+          </ul>
         </el-form-item>
         <div class="form-item-title">密码
           <span class="show-pwd" @click="showPwd">
@@ -33,12 +43,12 @@
             placeholder="Password"
             name="password"
             tabindex="2"
-            auto-complete="on"
+            autocomplete="off"
             @keyup.enter.native="handleLogin"
           />
         </el-form-item>
         <div class="keepPassword">
-          <el-checkbox v-model="keepPassword">记住密码</el-checkbox>
+          <el-checkbox @change="toggleKeepPassword">记住密码</el-checkbox>
           <span>忘记密码？</span>
         </div>
         <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
@@ -57,6 +67,8 @@
 
 <script>
 import { validUsername, valid_map } from '@/utils/validate'
+import { getLocalStorage_account, deleteLocalStorage_account, deleteLocalStorage_account_all } from '@/utils/localStorage'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'Login',
@@ -89,7 +101,16 @@ export default {
       passwordType: 'password',
       redirect: undefined,
       user_list: valid_map,
-      keepPassword: false // 是否记住密码
+      autocompleteList: [], // 自动填充列表 数据源
+      toggleShowAutocomplete: false // input 聚焦时 显示自动填充列表
+    }
+  },
+  computed: {
+    ...mapState({
+      keepPassword: state => state.user.keepPassword // 是否让浏览器记住密码
+    }),
+    isShowAutocomplete() { // 是否显示隐藏自动填充列表
+      return this.autocompleteList.length > 0
     }
   },
   watch: {
@@ -99,6 +120,12 @@ export default {
       },
       immediate: true
     }
+    /* autocompleteList: {
+      deep: true
+    } */
+  },
+  created() {
+    this.autocompleteList = getLocalStorage_account()
   },
   methods: {
     showPwd() {
@@ -141,7 +168,21 @@ export default {
         // `-webkit-gradient(radial, 0 0,${b}, 0 0, ${e}, from(rgba(255, 255, 255,1)), color-stop(0.5,rgba(255, 255, 255, 0.2)), to(rgba(255, 255, 255,1)))`
         b++
       }, 0)
-    }
+    },
+    toggleAutocomplete(b) { // 自动填充列表
+      this.toggleShowAutocomplete = b
+    },
+    deleteAutocompleteItem(i) { // 用户点击 自动填充列表的此行数据 的删除按钮
+      deleteLocalStorage_account(i)
+      this.autocompleteList = getLocalStorage_account()
+    },
+    deleteAutocompleteAll() { // 用户点击 自动填充列表的所有数据 的删除按钮
+      deleteLocalStorage_account_all()
+      this.toggleShowAutocomplete = false
+    },
+    ...mapActions({
+      'toggleKeepPassword': 'user/toggleKeepPassword'
+    })
   }
 }
 </script>
@@ -175,10 +216,10 @@ $cursor: #000;
       caret-color: $cursor;
       border-bottom: 1px solid #CACACA ;
 
-      &:-webkit-autofill {
+      /* &:-webkit-autofill { // 浏览器表单自动填充
         box-shadow: 0 0 0px 1000px #CACACA inset !important;
         -webkit-text-fill-color: $cursor !important;
-      }
+      } */
     }
   }
 
@@ -256,6 +297,49 @@ $main_hue: #2C9EF7; // 主色调
     right: 0;
     width: 320px;
     margin: 0 auto;
+
+    .autocomplete {
+      position: absolute;
+      background: #fff;
+      width: 100%;
+      padding: 10px 0 0 0;
+      box-shadow: -2px 4px 10px 0px #CACACA;
+      border-radius: 5px;
+      z-index: 100;
+
+      li {
+        $color: #dadce0; // 自动填充表单 每项 hover 颜色
+
+        height: 34px;
+        line-height: 34px;
+        position: relative;
+
+        &:hover {
+          background-color: $color;
+
+          .deleteBtn:after {
+            content: 'X';color: red;
+          }
+        }
+
+        .deleteBtn {
+          position: absolute;width: 40px;right: 0;top: 0;bottom: 0;font-size: 16px;cursor: pointer;background-color: inherit;
+
+          &:after {
+              content: '';color: $color;transition: color 1s linear;
+          }
+        }
+
+        &:last-child {
+          border-top: 1px solid $light_gray;text-align: center;
+
+          &:hover {
+            background: #fff;cursor: pointer;color: red;
+          }
+        }
+
+      }
+    }
   }
 
   .tips {
