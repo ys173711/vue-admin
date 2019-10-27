@@ -17,12 +17,12 @@
             type="text"
             tabindex="1"
             autocomplete="off"
-            @focus="toggleAutocomplete(true)"
+            @focus="toggleAutocomplete"
           />
-          <ul v-show="isShowAutocomplete && toggleShowAutocomplete" class="autocomplete">
-            <li v-for="(item,i) in autocompleteList" :key="i">
+          <ul v-show="showAutocomplete && toggleShowAutocomplete" class="autocomplete">
+            <li v-for="(item,i) in autocompleteList" :key="i" @click="autocompleteForm(item)">
               {{ item.username }}
-              <button class="deleteBtn" @click="deleteAutocompleteItem(i)" />
+              <button class="deleteBtn" @click.stop="deleteAutocompleteItem(i)" />
             </li>
             <li>
               <span @click="deleteAutocompleteAll">清空所有</span>
@@ -109,8 +109,12 @@ export default {
     ...mapState({
       keepPassword: state => state.user.keepPassword // 是否让浏览器记住密码
     }),
-    isShowAutocomplete() { // 是否显示隐藏自动填充列表
-      return this.autocompleteList.length > 0
+    showAutocomplete() { // autocompleteList 长度 > 0 才显示
+      if (this.autocompleteList.length > 0) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   watch: {
@@ -120,9 +124,6 @@ export default {
       },
       immediate: true
     }
-    /* autocompleteList: {
-      deep: true
-    } */
   },
   created() {
     this.autocompleteList = getLocalStorage_account()
@@ -169,15 +170,24 @@ export default {
         b++
       }, 0)
     },
-    toggleAutocomplete(b) { // 自动填充列表
-      this.toggleShowAutocomplete = b
+    toggleAutocomplete() { // 自动填充列表 转换是否显示
+      this.toggleShowAutocomplete = !this.toggleShowAutocomplete
     },
-    deleteAutocompleteItem(i) { // 用户点击 自动填充列表的此行数据 的删除按钮
-      deleteLocalStorage_account(i)
+    deleteAutocompleteItem(index) { // 用户点击自动填充列表的此行数据 的删除按钮
+      deleteLocalStorage_account(index)
       this.autocompleteList = getLocalStorage_account()
+      if (this.autocompleteList.length === 0) {
+        this.toggleShowAutocomplete = false
+      }
     },
     deleteAutocompleteAll() { // 用户点击 自动填充列表的所有数据 的删除按钮
       deleteLocalStorage_account_all()
+      this.toggleShowAutocomplete = false
+      this.autocompleteList = getLocalStorage_account()
+    },
+    autocompleteForm(item) { // 用户点击 自动填充列表的此行数据 就把数据自动填充到表单中
+      this.loginForm.username = item.username
+      this.loginForm.password = item.password
       this.toggleShowAutocomplete = false
     },
     ...mapActions({

@@ -36,6 +36,7 @@ const actions = {
         // 登录成功后，若用户点击了 记住密码，把用户存入 localstorage
         if (state.keepPassword) {
           setLocalStorage(account, 'account')
+          commit('SET_KEEPPASSWORD')
         }
         const data = response.result
         commit('SET_TOKEN', data.resultData.token) // 'admin-token'

@@ -56,5 +56,5 @@ export const deleteLocalStorage_account = (i) => {
  * @param
  */
 export const deleteLocalStorage_account_all = () => {
-  localStorage.setItem('account', null)
+  localStorage.setItem('account', [])
 }
